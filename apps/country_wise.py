@@ -9,7 +9,6 @@ import dash_bootstrap_components as dbc
 
 from dash.dependencies import Input, Output, State
 
-from app import app
 from apps import stock_market
 
 covid_confirmed = pd.read_csv('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv')
