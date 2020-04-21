@@ -6,3 +6,4 @@ pandas
 datetime
 plotly
 pandas-datareader
+gunicorn
