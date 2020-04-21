@@ -10,6 +10,7 @@ import dash_bootstrap_components as dbc
 
 from dash.dependencies import Input, Output, State
 
+from app import app
 from apps import country_wise
 
 table=pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')[0][['Symbol','Security']]
