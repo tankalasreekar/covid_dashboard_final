@@ -1,1 +1,1 @@
-web: gunicorn main:app
+web: vendor/bin/heroku-php-apache2 public/
