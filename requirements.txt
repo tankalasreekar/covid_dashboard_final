@@ -2,7 +2,9 @@ dash
 dash_core_components
 dash_html_components
 dash_bootstrap_components
-pandas
+pandas>=0.19.2
+lxml
+requests>=2.3.0
 datetime
 plotly
 pandas-datareader
