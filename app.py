@@ -336,13 +336,15 @@ world_map_layout = html.Div([html.Div([
                         	dcc.Graph(id = 'bollinger-bands'),
                         ], className="container")'''
 
+
+'''elif pathname == '/apps/stock_market':
+                    return stock_market_layout'''
+
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')])
 def display_page(pathname):
     if pathname == '/apps/country_wise':
         return country_wise_layout
-    '''elif pathname == '/apps/stock_market':
-                    return stock_market_layout'''
     elif pathname == '/apps/world_map':
         return world_map_layout
     else:
