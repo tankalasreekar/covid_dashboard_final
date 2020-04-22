@@ -305,7 +305,7 @@ world_map_layout = html.Div([html.Div([
                        dcc.Graph(id = 'choropleth-animate',figure = fig_conf)
                        ], className="container")
 
-stock_market_layout = html.Div([
+'''stock_market_layout = html.Div([
                             html.Div([
                             html.Div([
                  					html.Label("Choose a company"),
@@ -334,15 +334,15 @@ stock_market_layout = html.Div([
                         	dcc.Graph(id = 'ohlc-candlestick'),
                         	dcc.Graph(id = 'returns-graph'),
                         	dcc.Graph(id = 'bollinger-bands'),
-                        ], className="container")
+                        ], className="container")'''
 
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')])
 def display_page(pathname):
     if pathname == '/apps/country_wise':
         return country_wise_layout
-    elif pathname == '/apps/stock_market':
-        return stock_market_layout
+    '''elif pathname == '/apps/stock_market':
+                    return stock_market_layout'''
     elif pathname == '/apps/world_map':
         return world_map_layout
     else:
@@ -495,7 +495,7 @@ def toggle_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
         return False, False, not is_open3
     return False, False, False
 
-def get_data(inst):    
+'''def get_data(inst):    
     data = pd.DataFrame()
     try:
         data = web.DataReader(inst,'yahoo',start,end)
@@ -584,7 +584,7 @@ def update_figure(company,ohlc_selected):
     fig3.update_layout(yaxis_title="Returns",yaxis = dict(range = [min(pct_change)-0.025, max(pct_change)+0.025]))
     fig3.update_layout({'title':company + ' - Returns'})
 
-    return fig,fig2,fig3,fig4
+    return fig,fig2,fig3,fig4'''
 
 
 if __name__ == '__main__':
