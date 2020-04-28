@@ -2,7 +2,6 @@ import dash
 import datetime
 import random
 import pandas as pd
-import pandas_datareader.data as pdr
 import plotly.graph_objs as go
 import plotly.express as px
 import dash_core_components as dcc
@@ -501,7 +500,7 @@ def toggle_accordion(n1, n2, n3, is_open1, is_open2, is_open3):
 def get_data(inst):    
     data = pd.DataFrame()
     try:
-        data = pdr.get_data_yahoo(inst,start,end)
+        data = yf.download(inst,start,end)
     except Exception as e:
         print('No data available for ',inst, e)
 
