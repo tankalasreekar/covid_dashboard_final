@@ -9,5 +9,4 @@ requests>=2.14.2
 datetime
 plotly
 yfinance
-pandas-datareader>=0.4.0
 gunicorn
