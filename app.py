@@ -15,10 +15,6 @@ yf.pdr_override()
 
 from dash.dependencies import Input, Output, State
 
-app = dash.Dash(__name__)
-server = app.server
-app.config.suppress_callback_exceptions = True
-
 table=pd.read_html('https://en.wikipedia.org/wiki/List_of_S%26P_500_companies')[0][['Symbol','Security']]
 company_options = [{'label' : table.iloc[i]['Security'], 'value' : table.iloc[i]['Symbol']} for i in range(table.shape[0])]
 OHLC = [{'label' : i, 'value' : i} for i in ['Open','High','Low','Close']]
@@ -277,11 +273,6 @@ cards = dbc.Container([
     ],align = 'stretch',className = 'cards-row',style={'margin': 'auto', 'width': '80vw'})
     ])
 
-app.layout = html.Div([
-    dcc.Location(id='url', refresh=False),navbar,
-    html.Div(id='page-content')
-])
-
 index_layout = html.Div([cards])
 
 country_wise_layout = html.Div([
@@ -337,6 +328,15 @@ stock_market_layout = html.Div([
                         	dcc.Graph(id = 'returns-graph'),
                         	dcc.Graph(id = 'bollinger-bands'),
                         ], className="container")
+
+app = dash.Dash(__name__)
+server = app.server
+app.config.suppress_callback_exceptions = True
+
+app.layout = html.Div([
+    dcc.Location(id='url', refresh=False),navbar,
+    html.Div(id='page-content')
+])
 
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')])
