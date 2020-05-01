@@ -243,7 +243,7 @@ world_map_layout = html.Div([html.Div([
                         html.Button('Recovered', id='btn-nclicks-2', n_clicks=0,className='btn btn-outline-success'),
                         html.Button('Deaths', id='btn-nclicks-3', n_clicks=0,className='btn btn-outline-primary'),
                         html.Br(),],className='buttons'),
-                       dcc.Graph(id = 'choropleth-animate',figure = fig_conf,className = 'container')
+                       dcc.Graph(id = 'choropleth-animate',figure = fig_conf,style = {'width': '90vw', 'height': '100vh'})
                        ], style = {'margin' : '5%'})
 
 stock_market_layout = html.Div([
