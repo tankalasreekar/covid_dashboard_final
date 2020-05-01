@@ -47,10 +47,6 @@ covid_conf_agg.columns = pd.to_datetime(covid_conf_agg.columns)
 covid_rec_agg.columns = pd.to_datetime(covid_rec_agg.columns)
 covid_dead_agg.columns = pd.to_datetime(covid_dead_agg.columns)
 
-conf_diff = covid_conf_agg.diff(1,1).drop(covid_conf_agg.columns[0],axis=1)
-rec_diff = covid_rec_agg.diff(1,1).drop(covid_rec_agg.columns[0],axis=1)
-dead_diff = covid_dead_agg.diff(1,1).drop(covid_dead_agg.columns[0],axis=1)
-
 def get_choropleth_data(data):
     dfs = []
     data = data.reset_index()
@@ -84,6 +80,8 @@ def get_choropleth(data):
     return fig_world
 
 fig_conf = get_choropleth(covid_conf_agg)
+fig_rec = get_choropleth(covid_rec_agg)
+fig_dead = get_choropleth(covid_dead_agg)
 
 country_indicators = covid_conf_agg.index.unique()
 country_options = [{'label' : i, 'value' : i} for i in country_indicators]
@@ -310,7 +308,7 @@ world_map_layout = html.Div([html.Div([
                         html.Button('Deaths', id='btn-nclicks-3', n_clicks=0,className='btn btn-outline-primary'),
                         html.Br(),],className='buttons'),
                        dcc.Graph(id = 'choropleth-animate',figure = fig_conf)
-                       ], className="container")
+                       ])
 
 stock_market_layout = html.Div([
                             html.Div([
@@ -415,7 +413,11 @@ def update_figure(input1,scale):
 @app.callback(Output('daily-change-plot', 'figure'),
              [Input('country_options', 'value')])
 def update_figure(input1):
-    
+
+    conf_diff = covid_conf_agg.diff(1,1).drop(covid_conf_agg.columns[0],axis=1)
+    rec_diff = covid_rec_agg.diff(1,1).drop(covid_rec_agg.columns[0],axis=1)
+    dead_diff = covid_dead_agg.diff(1,1).drop(covid_dead_agg.columns[0],axis=1)
+
     data_conf = conf_diff.loc[input1]
     data_rec = rec_diff.loc[input1]
     data_dead = dead_diff.loc[input1]
@@ -480,7 +482,7 @@ def update_figure(input1):
                                                       {'step': 'all'}])},
                    'rangeslider': {'visible': True}, 'type': 'date'},
                    hovermode='x',barmode = 'stack',legend = dict(x=0.3, y=1,itemclick = 'toggleothers'),legend_orientation = 'h',)
-    
+
     fig3 = go.Figure(data = [trace_1,trace_2,trace_3], layout = layout3)
     
     return fig3
@@ -494,10 +496,8 @@ def displayClick(btn1, btn2, btn3):
     if 'btn-nclicks-1' in changed_id:
         return fig_conf
     elif 'btn-nclicks-2' in changed_id:
-        fig_rec = get_choropleth(covid_rec_agg)
         return fig_rec
     elif 'btn-nclicks-3' in changed_id:
-        fig_dead = get_choropleth(covid_dead_agg)
         return fig_dead
     else:
         return fig_conf
