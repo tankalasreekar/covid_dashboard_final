@@ -67,16 +67,30 @@ def get_choropleth_data(data):
         dfs.append(temp)
     return pd.concat(dfs,ignore_index=True)
 
-choropleth_animate_conf = get_choropleth_data(covid_conf_agg)
-choropleth_animate_rec = get_choropleth_data(covid_rec_agg)
-choropleth_animate_dead = get_choropleth_data(covid_dead_agg)
+def get_choropleth(data):
+    if str(data) == str(covid_conf_agg):
+        color_scale = px.colors.sequential.OrRd
+    elif str(data) == str(covid_rec_agg):
+        color_scale = px.colors.sequential.Greens
+    elif str(data) == str(covid_dead_agg):
+        color_scale = px.colors.sequential.Greys
+    choropleth_animate = get_choropleth_data(data)
+    fig_world = px.choropleth(choropleth_animate,
+    locations = 'iso3',color = 'People',hover_name='Country',animation_frame='Date',
+    color_continuous_scale = color_scale,range_color=[min(choropleth_animate.People.values),max(choropleth_animate.People.values)],
+    )
+    fig_world.update_layout(dict(coloraxis = dict(colorbar = dict(thickness = 10,xpad = 0,ypad = 0)),autosize = True))
+
+    return fig_world
+
+fig_conf = get_choropleth(covid_conf_agg)
 
 country_indicators = covid_conf_agg.index.unique()
 country_options = [{'label' : i, 'value' : i} for i in country_indicators]
 
 dates_axis = covid_conf_agg.columns
 
-trace_1 = go.Scatter(x = dates_axis, y = covid_conf_agg.loc['India'].values,
+'''trace_1 = go.Scatter(x = dates_axis, y = covid_conf_agg.loc['India'].values,
                     name = 'Confirmed Cases',
                     line = dict(width = 2,
                                 color = 'rgb(229, 151, 50)'))
@@ -122,9 +136,9 @@ trace_3 = go.Bar(x = dates_axis, y = covid_dead_agg.loc['India'].values,
 layout3 = go.Layout(title = 'Overview of affected people in India',
                    hovermode = 'x',barmode='stack')
 
-fig3 = go.Figure(data = [trace_1,trace_2,trace_3], layout = layout3)
+fig3 = go.Figure(data = [trace_1,trace_2,trace_3], layout = layout3)'''
 
-fig_conf = px.choropleth(choropleth_animate_conf,
+'''fig_conf = px.choropleth(choropleth_animate_conf,
     locations = 'iso3',color = 'People',hover_name='Country',animation_frame='Date',
     color_continuous_scale = px.colors.sequential.OrRd,range_color=[min(choropleth_animate_conf.People.values),max(choropleth_animate_conf.People.values)],
     )
@@ -138,7 +152,7 @@ fig_rec.update_layout(dict(coloraxis = dict(colorbar = dict(thickness = 10,xpad 
 fig_dead = px.choropleth(choropleth_animate_dead,
     locations = 'iso3',color = 'People',hover_name='Country',animation_frame='Date',
     color_continuous_scale = px.colors.sequential.Greys,range_color=[min(choropleth_animate_dead.People.values),max(choropleth_animate_dead.People.values)])
-fig_dead.update_layout(dict(coloraxis = dict(colorbar = dict(thickness = 10,xpad = 0,ypad = 0))))
+fig_dead.update_layout(dict(coloraxis = dict(colorbar = dict(thickness = 10,xpad = 0,ypad = 0))))'''
 
 def make_item(i,group_name,body):
     return dbc.Card(
@@ -163,15 +177,15 @@ accordion_body1 = html.Div([html.P([html.Label("Choose scale"),
                                         value='Linear'
                             )],
                         ),
-                dcc.Graph(id = 'plot', figure = fig),
+                dcc.Graph(id = 'plot')#, figure = fig),
     ])
 
 accordion_body2 = html.Div([
-                dcc.Graph(id = 'daily-change-plot', figure = fig2),
+                dcc.Graph(id = 'daily-change-plot')#, figure = fig2),
     ])
 
 accordion_body3 = html.Div([
-                dcc.Graph(id = 'bar-plot',figure = fig3 )
+                dcc.Graph(id = 'bar-plot')#,figure = fig3 )
     ])
 
 
@@ -380,8 +394,7 @@ def update_figure(input1,scale):
                         name = 'Dead',
                         line = dict(width = 2,
                                     color = 'rgb(50, 151, 229)'))
-    fig = go.Figure(data = [trace_1,trace_2,trace_3], layout = layout)
-    fig.update_layout(
+    layout = go.Layout(
     title="Overview of Affected People in "+input1,
     xaxis_title="Date",
     yaxis_title="Number of people",
@@ -393,8 +406,10 @@ def update_figure(input1,scale):
                                                        'stepmode': 'backward'},
                                                       {'step': 'all'}])},
                    'rangeslider': {'visible': True}, 'type': 'date'},
-                   hovermode='x',legend = dict(x=0.3, y=1,itemclick = 'toggleothers'),legend_orientation = 'h',
-)
+                   hovermode='x',legend = dict(x=0.3, y=1,itemclick = 'toggleothers'),legend_orientation = 'h',)
+
+    fig = go.Figure(data = [trace_1,trace_2,trace_3], layout = layout)
+    
     return fig
 
 @app.callback(Output('daily-change-plot', 'figure'),
@@ -417,8 +432,8 @@ def update_figure(input1):
                         name = 'More Dead',
                         line = dict(width = 2,
                                     color = 'rgb(50, 151, 229)'))
-    fig2 = go.Figure(data = [trace_1,trace_2,trace_3], layout = layout2)
-    fig2.update_layout(
+
+    layout2 = go.Layout(
     title="Daily Change of Affected People in "+input1,
     xaxis_title="Date",
     yaxis_title="Number of people",
@@ -429,8 +444,10 @@ def update_figure(input1):
                                                        'stepmode': 'backward'},
                                                       {'step': 'all'}])},
                    'rangeslider': {'visible': True}, 'type': 'date'},
-                   hovermode='x',barmode = 'stack',legend = dict(x=0.3, y=0.95,itemclick = 'toggleothers'),legend_orientation = 'h',
-)
+                   hovermode='x',barmode = 'stack',legend = dict(x=0.3, y=0.95,itemclick = 'toggleothers'),legend_orientation = 'h',)
+
+    fig2 = go.Figure(data = [trace_1,trace_2,trace_3], layout = layout2)
+    
     return fig2
 
 @app.callback(Output('bar-plot', 'figure'),
@@ -450,8 +467,8 @@ def update_figure(input1):
     trace_3 = go.Bar(x = data_dead.index, y = data_dead.values,
                         name = 'Dead',
                         marker_color = 'red')
-    fig3 = go.Figure(data = [trace_1,trace_2,trace_3], layout = layout3)
-    fig3.update_layout(
+
+    layout3 = go.Layout(
     title="Overview of Affected People in "+input1,
     xaxis_title="Date",
     yaxis_title="Number of people",
@@ -462,8 +479,10 @@ def update_figure(input1):
                                                        'stepmode': 'backward'},
                                                       {'step': 'all'}])},
                    'rangeslider': {'visible': True}, 'type': 'date'},
-                   hovermode='x',barmode = 'stack',legend = dict(x=0.3, y=1,itemclick = 'toggleothers'),legend_orientation = 'h',
-)
+                   hovermode='x',barmode = 'stack',legend = dict(x=0.3, y=1,itemclick = 'toggleothers'),legend_orientation = 'h',)
+    
+    fig3 = go.Figure(data = [trace_1,trace_2,trace_3], layout = layout3)
+    
     return fig3
 
 @app.callback(Output('choropleth-animate', 'figure'),
@@ -475,8 +494,10 @@ def displayClick(btn1, btn2, btn3):
     if 'btn-nclicks-1' in changed_id:
         return fig_conf
     elif 'btn-nclicks-2' in changed_id:
+        fig_rec = get_choropleth(covid_rec_agg)
         return fig_rec
     elif 'btn-nclicks-3' in changed_id:
+        fig_dead = get_choropleth(covid_dead_agg)
         return fig_dead
     else:
         return fig_conf
