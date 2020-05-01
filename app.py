@@ -80,8 +80,8 @@ def get_choropleth(data):
     return fig_world
 
 fig_conf = get_choropleth(covid_conf_agg)
-fig_rec = get_choropleth(covid_rec_agg)
-fig_dead = get_choropleth(covid_dead_agg)
+'''fig_rec = get_choropleth(covid_rec_agg)
+fig_dead = get_choropleth(covid_dead_agg)'''
 
 country_indicators = covid_conf_agg.index.unique()
 country_options = [{'label' : i, 'value' : i} for i in country_indicators]
