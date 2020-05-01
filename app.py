@@ -244,7 +244,7 @@ world_map_layout = html.Div([html.Div([
                         html.Button('Deaths', id='btn-nclicks-3', n_clicks=0,className='btn btn-outline-primary'),
                         html.Br(),],className='buttons'),
                        dcc.Graph(id = 'choropleth-animate',figure = fig_conf)
-                       ])
+                       ], style = {'margin' : '5%'})
 
 stock_market_layout = html.Div([
                             html.Div([
@@ -432,8 +432,10 @@ def displayClick(btn1, btn2, btn3):
     if 'btn-nclicks-1' in changed_id:
         return fig_conf
     elif 'btn-nclicks-2' in changed_id:
+        fig_rec = get_choropleth(covid_rec_agg)
         return fig_rec
     elif 'btn-nclicks-3' in changed_id:
+        fig_dead = get_choropleth(covid_dead_agg)
         return fig_dead
     else:
         return fig_conf
